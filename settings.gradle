@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "LX470climate"
-include ':climate'
-include ':fytcanbusmonitor'
+
+include ':climate', ':fytcanbusmonitor'
