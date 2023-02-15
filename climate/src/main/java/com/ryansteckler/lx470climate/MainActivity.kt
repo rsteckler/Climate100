@@ -182,11 +182,11 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
                     val newTemp = intArray?.get(0)
                     val txtTemperature = findViewById<TextView>(R.id.txtTemperature)
                     if (newTemp == -2) {
-                        txtTemperature.text = "LOW"
+                        txtTemperature.text = "LO"
                     } else if (newTemp == -3) {
-                        txtTemperature.text = "HIGH"
+                        txtTemperature.text = "HI"
                     } else {
-                        val inF: Int? = newTemp?.plus(60)
+                        val inF: Int? = newTemp?.plus(64)
                         if (inF != null) {
                             txtTemperature.text = inF.toString()
                         }
