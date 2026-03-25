@@ -8,7 +8,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -149,7 +148,7 @@
                         android:cropToPadding="false"
                         android:gravity="bottom|center_horizontal"
                         android:scaleType="centerInside"
-                        tools:srcCompat="@drawable/img_vents_face" />
+                        app:srcCompat="@drawable/img_vents_off" />
 
                     <ImageButton
                         android:id="@+id/btnVent"
@@ -187,7 +186,7 @@
                         android:layout_weight="1.5"
                         android:gravity="bottom|center_horizontal"
                         android:scaleType="centerInside"
-                        tools:srcCompat="@drawable/img_defrost_on" />
+                        app:srcCompat="@drawable/img_defrost_off" />
 
                     <ImageButton
                         android:id="@+id/btnDefrost"
@@ -225,7 +224,7 @@
                         android:layout_weight="1.5"
                         android:gravity="bottom|center_horizontal"
                         android:scaleType="centerInside"
-                        tools:srcCompat="@drawable/img_ac_on" />
+                        app:srcCompat="@drawable/img_ac_off" />
 
                     <ImageButton
                         android:id="@+id/btnAC"
@@ -269,7 +268,7 @@
                         android:layout_weight="1.5"
                         android:gravity="bottom|center_horizontal"
                         android:scaleType="centerInside"
-                        tools:srcCompat="@drawable/img_recirc_on" />
+                        app:srcCompat="@drawable/img_recirc_off" />
 
                     <ImageButton
                         android:id="@+id/btnRecirc"
@@ -385,16 +384,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        tools:visibility="visible">
+        android:gravity="right|bottom"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp">
 
         <TextView
             android:id="@+id/text_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:gravity="bottom"
-            android:textColor="@color/white"
-            android:visibility="invisible" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
+
+        <Switch
+            android:id="@+id/switchCanType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New CAN"
+            android:textColor="#AAAAAA"
+            android:textSize="11sp"
+            android:checked="true"
+            android:theme="@style/Theme.AppCompat" />
     </TableRow>
 </TableLayout>
 

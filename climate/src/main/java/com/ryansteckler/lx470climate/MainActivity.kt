@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
 
 
     private val remoteProxy = RemoteModuleProxy()
+    var vehicleProfile: VehicleProfile = VehicleProfile.DEFAULT
+        private set
 
     var windowOn: Boolean = false
     var faceOn: Boolean = false
@@ -46,29 +49,11 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
         findViewById<ImageButton>(R.id.btnFanMinus).setOnTouchListener(this)
         findViewById<ImageButton>(R.id.btnFanOff).setOnTouchListener(this)
 
-        findViewById<TextView>(R.id.text_view).append("hi")
-        findViewById<TextView>(R.id.text_view).movementMethod = ScrollingMovementMethod()
-
-
-//        buttonUp.setOnClickListener {
-//            var rm = MsToolkitConnection.instance.remoteToolkit?.getRemoteModule(MODULE_CODE_MAIN)
-//                        Log.e("RYANNNNNNNNN", "rm is $rm")
-//                          rm?.cmd(0, intArrayOf(11), null, null)
-//                Log.e("RYANCC3", "Sending message")
-//                var b = Bundle()
-//                val i: Int = 0
-//                b.putInt("param0", i)
-//                SyuJniNative.getInstance().syu_jni_command(50, b, null)
-//                Log.e("RYANCC3", "Sent message")
-//            Log.e("RYANNNNNNNNN", "RTK: ${MsToolkitConnection.instance.remoteToolkit}")
-//
-//            var rm = MsToolkitConnection.instance.remoteToolkit?.getRemoteModule(MODULE_CODE_CANBUS)
-//            Log.e("RYANNNNNNNNN", "RM: $rm")
-//
-//            rm?.cmd(2, intArrayOf(48, 1), null, null)
-//            Log.e("RYANNNNNNNNN", "Sent message")
-//            }
-
+        val canSwitch = findViewById<Switch>(R.id.switchCanType)
+        canSwitch.isChecked = vehicleProfile == VehicleProfile.LC100
+        canSwitch.setOnCheckedChangeListener { _, isChecked ->
+            vehicleProfile = if (isChecked) VehicleProfile.LC100 else VehicleProfile.LX470
+        }
     }
 
     override fun onStart() {
@@ -79,7 +64,6 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
         connectSound()
         connectCanUp()
         MsToolkitConnection.instance.connect(this)
-
     }
 
 
@@ -102,32 +86,34 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
         when (motionEvent?.action) {
             MotionEvent.ACTION_DOWN -> {
                 var highlight = Color.argb(50, 255, 255, 255)
-                if (view.id == R.id.btnTempMinus) {
-                    highlight = Color.argb(50, 0, 0, 255)
+                if (view.id == R.id.btnTempPlus) {
+                    highlight = Color.argb(50, 255, 0, 0)
                 }
                 else if (view.id == R.id.btnTempMinus) {
-                    highlight = Color.argb(50, 255, 0, 0)
+                    highlight = Color.argb(50, 0, 0, 255)
                 }
 
                 image?.setColorFilter(highlight, PorterDuff.Mode.SRC_ATOP)
                 image?.invalidate()
+
+                if (canBusCommand != -1) {
+                    val rm = MsToolkitConnection.instance.remoteToolkit?.getRemoteModule(MODULE_CODE_CANBUS)
+                    rm?.cmd(0, intArrayOf(canBusCommand, 1), null, null)
+                    view?.performClick()
+                }
             }
             MotionEvent.ACTION_UP -> {
                 image?.clearColorFilter()
                 image?.invalidate()
+
+                if (canBusCommand != -1) {
+                    val rm = MsToolkitConnection.instance.remoteToolkit?.getRemoteModule(MODULE_CODE_CANBUS)
+                    rm?.cmd(0, intArrayOf(canBusCommand, 0), null, null)
+                }
             }
         }
 
-        if (canBusCommand != -1) {
-            val startEvent: Boolean = motionEvent?.action == MotionEvent.ACTION_DOWN
-            var rm = MsToolkitConnection.instance.remoteToolkit?.getRemoteModule(MODULE_CODE_CANBUS)
-            rm?.cmd(0, intArrayOf(canBusCommand, if (startEvent) 1 else 0), null, null)
-            if (startEvent) {
-                view?.performClick()
-            }
-        }
-
-        return false
+        return true
     }
 
 
@@ -170,15 +156,14 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
 
     fun canBusNotify(systemName: String, updateCode: Int, intArray: IntArray?, floatArray: FloatArray?, strArray: Array<String?>?) {
         if (systemName.lowercase().equals("canbus")) {
-            if (updateCode in 1..16 || updateCode in 69..81 && updateCode != 77) {
-                findViewById<TextView>(R.id.text_view).append(
-                    "updateCode: " + updateCode + " value: " + intArray?.get(
-                        0
-                    ) + "\n"
-                )
-            }
+            // Debug logging disabled
+            // if (updateCode in 1..16 || updateCode in 69..81 && updateCode != 77) {
+            //     findViewById<TextView>(R.id.text_view).append(
+            //         "updateCode: " + updateCode + " value: " + intArray?.get(0) + "\n"
+            //     )
+            // }
             when (updateCode) {
-                11 -> {
+                vehicleProfile.updateTemperature -> {
                     val newTemp = intArray?.get(0)
                     val txtTemperature = findViewById<TextView>(R.id.txtTemperature)
                     if (newTemp == -2) {
@@ -186,56 +171,58 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
                     } else if (newTemp == -3) {
                         txtTemperature.text = "HI"
                     } else {
-                        val inF: Int? = newTemp?.plus(64)
+                        val inF: Int? = newTemp?.plus(vehicleProfile.tempOffset)
                         if (inF != null) {
                             txtTemperature.text = inF.toString()
                         }
                     }
                 }
-                4 -> {
+                vehicleProfile.updateAuto -> {
                     val autoOn = intArray?.get(0)
                     findViewById<TextView>(R.id.lblAuto).visibility =
                         if (autoOn == 0) View.INVISIBLE else View.VISIBLE
                 }
-                2 -> {
+                vehicleProfile.updateAC -> {
                     val acOn = intArray?.get(0)
                     findViewById<ImageView>(R.id.imgAC).setImageResource(if (acOn == 1) R.drawable.img_ac_on else R.drawable.img_ac_off)
                 }
-                3 -> {
+                vehicleProfile.updateRecirc -> {
                     val recircOn = intArray?.get(0)
                     findViewById<ImageView>(R.id.imgRecirc).setImageResource(if (recircOn == 1) R.drawable.img_recirc_on else R.drawable.img_recirc_off)
                 }
-                15 -> {
+                vehicleProfile.updateRecircAuto -> {
                     val recircAutoOn = intArray?.get(0)
                     findViewById<TextView>(R.id.lblAutoRecirc).visibility =
                         if (recircAutoOn == 0) View.INVISIBLE else View.VISIBLE
                 }
-                10 -> {
+                vehicleProfile.updateFanSpeed -> {
                     val fanSpeed = intArray?.get(0)
                     findViewById<TextView>(R.id.txtFanSpeed).text = fanSpeed.toString()
                 }
-                6 -> {
+                vehicleProfile.updateDefrost -> {
                     val defrostOn = intArray?.get(0)
                     findViewById<ImageView>(R.id.imgDefrost).setImageResource(if (defrostOn == 1) R.drawable.img_defrost_on else R.drawable.img_defrost_off)
                 }
-                7 -> {
+                vehicleProfile.updateWindowVent -> {
                     windowOn = intArray?.get(0) == 1
                     handleVentStatus()
                 }
-                8 -> {
+                vehicleProfile.updateFaceVent -> {
                     faceOn = intArray?.get(0) == 1
                     handleVentStatus()
                 }
-                9 -> {
+                vehicleProfile.updateFeetVent -> {
                     feetOn = intArray?.get(0) == 1
                     handleVentStatus()
                 }
-
             }
         }
 
     }
     fun handleVentStatus() {
+        // Ignore face+window combination — transient state during vent mode cycling
+        if (faceOn && windowOn) return
+
         if (faceOn && feetOn) {
             findViewById<ImageView>(R.id.imgVents).setImageResource(R.drawable.img_vents_foot_face)
         } else if (feetOn && windowOn) {
@@ -244,6 +231,8 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
             findViewById<ImageView>(R.id.imgVents).setImageResource(R.drawable.img_vents_foot)
         } else if (faceOn) {
             findViewById<ImageView>(R.id.imgVents).setImageResource(R.drawable.img_vents_face)
+        } else if (windowOn) {
+            findViewById<ImageView>(R.id.imgVents).setImageResource(R.drawable.img_vents_defrost_only)
         } else {
             findViewById<ImageView>(R.id.imgVents).setImageResource(R.drawable.img_vents_off)
         }
