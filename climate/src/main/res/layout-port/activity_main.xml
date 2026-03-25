@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#040404"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".MainActivity">
+
+    <!-- Temperature Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btnTempMinus"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            android:contentDescription="Temp Down"
+            android:scaleType="centerInside"
+            android:src="@drawable/img_temp_minus" />
+
+        <TextView
+            android:id="@+id/txtTemperature"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:fontFamily="@font/lato"
+            android:gravity="center"
+            android:text="72"
+            android:textColor="@color/white"
+            android:textSize="36sp" />
+
+        <ImageButton
+            android:id="@+id/btnTempPlus"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            android:contentDescription="Temp Up"
+            android:scaleType="centerInside"
+            android:src="@drawable/img_temp_plus" />
+
+    </LinearLayout>
+
+    <!-- Fan Speed Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btnFanMinus"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00151515"
+            android:contentDescription="Fan Down"
+            android:scaleType="centerInside"
+            android:src="@drawable/img_fan_minus" />
+
+        <TextView
+            android:id="@+id/txtFanSpeed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:fontFamily="@font/lato"
+            android:gravity="center"
+            android:text="4"
+            android:textColor="@color/white"
+            android:textSize="36sp" />
+
+        <ImageButton
+            android:id="@+id/btnFanPlus"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00151515"
+            android:contentDescription="Fan Up"
+            android:scaleType="centerInside"
+            android:src="@drawable/img_fan_plus" />
+
+        <ImageButton
+            android:id="@+id/btnFanOff"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00151515"
+            android:contentDescription="Off"
+            android:scaleType="centerInside"
+            android:src="@drawable/img_off" />
+
+    </LinearLayout>
+
+    <!-- AC + Recirc Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imgAC"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:src="@drawable/img_ac_off" />
+
+            <ImageButton
+                android:id="@+id/btnAC"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:contentDescription="AC"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/imgbtn_ac" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imgRecirc"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:src="@drawable/img_recirc_off" />
+
+            <ImageButton
+                android:id="@+id/btnRecirc"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#00151515"
+                android:contentDescription="Recirc"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/imgbtn_recirc" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Defrost + Auto Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imgDefrost"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:src="@drawable/img_defrost_off" />
+
+            <ImageButton
+                android:id="@+id/btnDefrost"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#00151515"
+                android:contentDescription="Defrost"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/imgbtn_defrost" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/lblAuto"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/lato"
+                android:gravity="center"
+                android:text="Auto"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/btnAuto"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:contentDescription="Auto"
+                android:scaleType="centerInside"
+                android:src="@drawable/img_auto" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Vent button Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btnVent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00151515"
+            android:contentDescription="Vent"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/imgbtn_vents" />
+
+    </LinearLayout>
+
+    <!-- Hidden views required by MainActivity code -->
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/lblAutoRecirc"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imgVents"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/lblTemperature"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/lblFanSpeed"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <Switch
+        android:id="@+id/switchCanType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="New CAN"
+        android:textColor="#AAAAAA"
+        android:textSize="11sp"
+        android:checked="true"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:theme="@style/Theme.AppCompat" />
+
+</LinearLayout>
